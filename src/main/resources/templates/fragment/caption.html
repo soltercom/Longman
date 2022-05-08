@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="buttonText" type="java.lang.String"*/-->
+<!--/*@thymesVar id="buttonRef" type="java.lang.String"*/-->
+<div th:fragment="list-caption(title, buttonText, buttonRef)"
+     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2" th:text="${title}"></h1>
+    <a role="button" class="btn btn-primary btn-sm"
+        th:text="${buttonText}" th:href="${buttonRef}">Add</a>
+</div>
+
+<div th:fragment="caption(title)"
+     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2" th:text="${title}"></h1>
+</div>
+
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${word.getName()}]]</title>
+</head>
+<body>
+<div layout:fragment="page-content">
+    <div th:replace="fragment/caption :: caption(title=${word.getName()})">
+    </div>
+    <div th:utext="${word.getArticle()}"></div>
+</div>
+</body>
+</html>
+

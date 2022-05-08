@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+    <th:block th:fragment="list-data">
+        <tr th:each="word : ${wordList}">
+            <td th:text="${word.name()}"></td>
+            <td>
+                <a th:href="@{dictionary/__${word.id()}__}">
+                    <i class="text-secondary opacity-25" th:data-feather="'edit'"></i>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{dictionary/__${word.id()}__/schema}">
+                    <i class="text-secondary opacity-25" th:data-feather="'feather'"></i>
+                </a>
+            </td>
+        </tr>
+    </th:block>
+</html>

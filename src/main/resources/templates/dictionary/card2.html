@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<div th:fragment="card2(card)">
+
+    <div class="btn-group article" th:id="|card${card.getId()}|">
+        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+            th:utext="${card.getText()}">
+        </button>
+        <ul class="dropdown-menu">
+            <li th:each="card2: ${card.getChildren()}">
+                <div class="dropdown-item" th:utext="${card2.getText()}"></div>
+            </li>
+        </ul>
+    </div>
+
+    <svg class="svg" viewBox="0 0 20px 20px" xmlns="http://www.w3.org/2000/svg"
+         data-bs-toggle="tooltip" title="TEST">
+        <circle cx="10px" cy="10px" r="10px"/>
+    </svg>
+
+    <!--<div class="card w-25 m-3 article">
+        <div class="card-header">
+            <span class="fw-bold" th:utext="${card.getText()}"></span>
+        </div>
+        <th:block th:each="card2: ${card.getChildren()}">
+            <div class="card-body">
+                <div class="card-text" th:utext="${card2.getText()}">
+                </div>
+                <th:block th:each="card3: ${card2.getChildren()}">
+                    <div class="card-text" th:utext="${card3.getText()}">
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+    </div>-->
+</div>
+</html>
+

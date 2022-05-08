@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <!--/*@thymesVar id="link" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="icon" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="activeMenuItem" type="java.lang.String"*/-->
+    <li th:fragment="nav-item(link, title, icon)" class="nav-item">
+        <a class="nav-link" aria-current="page" th:href="${link}"
+            th:classappend="${title == activeMenuItem}? 'active' : ''">
+            <i th:data-feather="${icon}" class="me-1"></i>
+            [[${title}]]
+        </a>
+    </li>
+
+    <div th:fragment="menu" class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li th:replace="fragment/sidebar-menu :: nav-item(link='/', title='Dictionary', icon='book-open')"></li>
+        </ul>
+    </div>
+
+</html>

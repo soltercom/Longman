@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
+        th:with="activeMenuItem='Dictionary'">
+<head>
+    <title>Dictionary</title>
+</head>
+<body>
+<div layout:fragment="page-content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" th:text="'Dictionary'"></h1>
+        <div>
+            <div class="input-group">
+                <span class="input-group-text border-secondary">
+                    <i th:data-feather="'search'" class="opacity-50"></i>
+                </span>
+                <input id='word-search' placeholder='Find a word' type="text" class="form-control border-secondary border-1"/>
+                <span class="input-group-text border-secondary" onclick="onSearchClear()" style="cursor: pointer">
+                    <i th:data-feather="'delete'" class="opacity-50"></i>
+                </span>
+                <!--<button class="btn btn-outline-secondary" type="button" onclick="onSearchClear()">x</button>-->
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Word</th>
+            <th scope="col" style="width: 48px"></th>
+            <th scope="col" style="width: 48px"></th>
+        </tr>
+        </thead>
+        <tbody id="list-data">
+            <tr th:each="word : ${wordList}">
+                <td th:text="${word.name()}"></td>
+                <td>
+                    <a th:href="@{dictionary/__${word.id()}__}">
+                        <i class="text-secondary opacity-25" th:data-feather="'edit'"></i>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{dictionary/__${word.id()}__/schema}">
+                        <i class="text-secondary opacity-25" th:data-feather="'feather'"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<th:block layout:fragment="page-scripts">
+    <script>
+        $(document).ready(function () {
+            $("#word-search").keyup(function () {
+                const value = $(this).val().trim();
+                $("#list-data").load(`/dictionary?search=${value}`, () => feather.replace());
+            });
+        });
+        function onSearchClear() {
+            $("#word-search").val("");
+            $("#list-data").load(`/dictionary?search=`, () => feather.replace());
+        }
+    </script>
+</th:block>
+</body>
+</html>
