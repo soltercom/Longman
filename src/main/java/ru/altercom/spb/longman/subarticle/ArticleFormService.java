@@ -21,7 +21,26 @@ public class ArticleFormService {
         this.wordRepo = wordRepo;
     }
 
+    private Long findIdByName(String name) {
+        var word = wordRepo.findByName(name);
+        if (word.isPresent()) {
+            return word.get().getId();
+        }
+        return 0L;
+    }
+
     private String toHtml(String line) {
+
+        var pattern = Pattern.compile("<<[A-Z /]+>>");
+        var matcher = pattern.matcher(line);
+        while(matcher.find()) {
+            var nameBefore = matcher.group();
+            var name = nameBefore.replaceAll("<<", "");
+            name = name.replaceAll(">>", "");
+            var id = findIdByName(name);
+            line = line.replaceAll(nameBefore, "<a href='/dictionary/" + id + "/schema'>" + name + "</a>");
+        }
+
         line = line.replace("▷", "");
         line = line.replaceAll("\\[m4]\\[/m]", "");
         line = line.replaceAll("\\[/m]", "[/m]<br>");
