@@ -8,102 +8,37 @@
     <title>[[${word.getName()}]]</title>
 </head>
 <body>
-<div layout:fragment="page-content" id="schema-container">
-    <div th:replace="fragment/caption :: caption(title=${word.getName()})">
-    </div>
-
-    <th:block th:each="l1, iter1: ${articleForm.getChildren()}">
-        <th:block th:if="${l1.isSimple()}">
-            <button th:utext="${l1.getText()}" class="l1 btn btn-light text-wrap"
-                    th:data-x="${l1.getX()}" th:data-y="${l1.getY()}"
-                    style="max-width: 200px; position: absolute;"
-                    th:data-id="${l1.getId()}"></button>
-            <button th:each="l2: ${l1.getChildren()}" class="l2 btn btn-light" type="button"
-                 th:utext="${l2.getText()}" th:data-x="${l2.getX()}" th:data-y="${l2.getY()}" th:data-parent-id="${l1.getId()}"
-                    data-bs-toggle="collapse" th:data-bs-target="|#info${l2.getId()}|" aria-expanded="false" th:aria-controls="|#info${l2.getId()}|"
-                    style="max-width: 200px; position: absolute;"></button>
-            <div th:each="l2: ${l1.getChildren()}" style="min-height: 120px; position: absolute;" class="l3"
-                 th:data-x="${l2.getX()}" th:data-y="${l2.getY()}"
-                 th:data-parent-id="${l1.getId()}">
-                <div class="collapse collapse-horizontal" th:id="|info${l2.getId()}|">
-                    <div class="card card-body" style="width: 400px; max-height: 400px; overflow-y: scroll; z-index: 10;"
-                        th:utext="${l2.getHtml()}">
+    <div layout:fragment="page-content" id="schema-container">
+        <div th:replace="fragment/caption :: caption(title=${word.getName()})">
+        </div>
+        <div class="accordion" id="accordionSchema">
+            <div class="accordion-item" th:each="l1, iter1: ${articleForm.getChildren()}" th:if="${!l1.isIndex()}">
+                <h2 class="accordion-header" th:id="|heading${iter1.count}|">
+                    <button class="accordion-button" type="button"
+                            data-bs-toggle="collapse" th:data-bs-target="|#collapse${iter1.count}|"
+                            aria-expanded="true" th:aria-controls="|collapse${iter1.count}|"
+                            th:utext="${l1.getText()}">
+                    </button>
+                </h2>
+                <div th:id="|collapse${iter1.count}|" class="accordion-collapse collapse" th:classappend="${l1.isSimple()? 'show': ''}" th:aria-labelledby="|heading${iter1.count}|">
+                    <div class="accordion-body">
+                        <span th:each="l2, iter2: ${l1.getChildren()}">
+                            <button class="l2 btn btn-light text-wrap me-5 mb-2"
+                                    th:utext="${l2.getText()}"
+                                    type="button"
+                                    data-bs-toggle="collapse" th:data-bs-target="|#collapseL2${iter1.count}_${iter2.count}|"
+                                    aria-expanded="false" th:aria-controls="|collapseL2${iter1.count}_${iter2.count}|"
+                                    style="width: 200px;">
+                            </button>
+                            <div class="collapse mb-3" th:id="|collapseL2${iter1.count}_${iter2.count}|">
+                                <div class="card card-body" th:utext="${l2.getHtml()}" style="max-width: 500px;">
+                                </div>
+                            </div>
+                        </span>
                     </div>
                 </div>
             </div>
-        </th:block>
-    </th:block>
-
-</div>
-<th:block layout:fragment="page-scripts">
-    <script>
-        $(function() {
-            let prevX, prevY;
-            $(".l1").draggable({
-                start: function() {
-                    const offset = $(this).offset();
-                    prevX = offset.left;
-                    prevY = offset.top;
-                },
-                drag: function() {
-                    const offset = $(this).offset();
-                    const dx = offset.left - prevX;
-                    const dy = offset.top - prevY;
-                    const id = $(this).attr("data-id");
-                    $(".l2[data-parent-id="+id+"],.l3[data-parent-id="+id+"]").each((i, elem) => {
-                       const offset = $(elem).offset();
-                        $(elem).offset({left: offset.left + dx, top: offset.top + dy});
-                    });
-                    prevX = offset.left;
-                    prevY = offset.top;
-                }
-            });
-            $(".l2").draggable({
-                start: function() {
-                    const offset = $(this).offset();
-                    prevX = offset.left;
-                    prevY = offset.top;
-                },
-                drag: function() {
-                    const offset = $(this).offset();
-                    const dx = offset.left - prevX;
-                    const dy = offset.top - prevY;
-                    const id = $(this).attr("data-bs-target");
-                    $(id).each((i, elem) => {
-                        const offset = $(elem).offset();
-                        $(elem).offset({left: offset.left + dx, top: offset.top + dy});
-                    });
-                    prevX = offset.left;
-                    prevY = offset.top;
-                }
-            });
-
-            $(".btn").draggable({cancel:false});
-
-            const w = Math.floor($("#schema-container").width() / 2);
-
-            $(".l1").each((i, elem) => {
-                const elemW = Math.floor($(elem).width()/2);
-                const elemH = Math.floor($(elem).height()/2);
-                const x = (w - elemW) + "px";
-                const y = ($(elem).attr("data-y") - elemH) + "px";
-                $(elem).css({left: x, top: y});
-            });
-
-            $(".l2").each((i, elem) => {
-                const elemW = Math.floor($(elem).width()/2);
-                const x = (w - elemW + parseInt($(elem).attr("data-x"))) + "px";
-                const y = $(elem).attr("data-y") +"px";
-                $(elem).css({left: x, top: y});
-            });
-
-            $(".l3").each((i, elem) => {
-                const x = (w + parseInt($(elem).attr("data-x"))) + "px";
-                const y = (50 + parseInt($(elem).attr("data-y"))) +"px";
-                $(elem).css({left: x, top: y});
-            });
-        });
-    </script>
-</th:block>
+        </div>
+    </div>
 </body>
 </html>

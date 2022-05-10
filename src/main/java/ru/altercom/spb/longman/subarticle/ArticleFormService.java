@@ -22,6 +22,7 @@ public class ArticleFormService {
     }
 
     private String toHtml(String line) {
+        line = line.replace("▷", "");
         line = line.replaceAll("\\[m4]\\[/m]", "");
         line = line.replaceAll("\\[/m]", "[/m]<br>");
         line = line.replaceAll("\\[b]", "<b>");
@@ -32,13 +33,13 @@ public class ArticleFormService {
         line = line.replaceAll("\\[/ex]", "</i>");
         line = line.replaceAll("\\[\\*]", "");
         line = line.replaceAll("\\[/\\*]", "");
-        line = line.replaceAll("\\[i]", "<b><i>");
-        line = line.replaceAll("\\[/i]", "</i></b>");
+        line = line.replaceAll("\\[i]", "");
+        line = line.replaceAll("\\[/i]", "");
         line = line.replaceAll("\\[trn]", "");
         line = line.replaceAll("\\[/trn]", "");
         line = line.replaceAll("\\[c darkblue]", "<span style='color: darkblue'>");
         line = line.replaceAll("\\[c gray]", "<span style='color: gray'>");
-        line = line.replaceAll("\\[c blue]", "<span style='color: blue'>");
+        line = line.replaceAll("\\[c blue]", "<span style='color: darkblue'>");
         line = line.replaceAll("\\[c green]", "<span style='color: green'>");
         line = line.replaceAll("\\[c crimson]", "<span style='color: crimson'>");
         line = line.replaceAll("\\[c maroon]", "<span style='color: maroon'>");
@@ -59,7 +60,9 @@ public class ArticleFormService {
     }
 
     private ArticleForm parseLine1(String line) {
-        if (line.contains("INDEX:") || line.contains("RELATED WORDS")) {
+        var html = "<span style='color: darkblue'><b>" + toHtml(line) + "</b></span>";
+        return new ArticleForm(null, 1, html, "", "");
+        /*if (line.contains("INDEX:") || line.contains("RELATED WORDS")) {
             var html = toHtml(line);
             return new ArticleForm(null, 1, html, "", "");
         } else {
@@ -67,11 +70,13 @@ public class ArticleFormService {
             var num = arr[0].replaceAll("(\\[b]|\\[/b]|\\.)", "");
             var html = toHtml(arr[1]);
             return new ArticleForm(Long.valueOf(num), 1, html, "", "");
-        }
+        }*/
     }
 
     private ArticleForm parseLine2(String line) {
-        if (line.startsWith("▷")) {
+        var html = toHtml(line);
+        return new ArticleForm(null, 2, html, "", "");
+        /*if (line.startsWith("▷")) {
             var text = toHtml(findText(line, TEXT).replace("▷", ""));
             var transcription = toHtml(findText(line, TRANSCRIPTION));
             var feature = toHtml(findText(line, FEATURE));
@@ -82,11 +87,13 @@ public class ArticleFormService {
         } else {
             var html = toHtml(line);
             return new ArticleForm(null, 2, html, "", "");
-        }
+        }*/
     }
 
     private ArticleForm parseLine3(String line) {
-        if (line.startsWith("[b]")) {
+        var html = toHtml(line);
+        return new ArticleForm(null, 3, html, "", "");
+        /*if (line.startsWith("[b]")) {
             var arr = line.split(" ", 2);
             var num = arr[0].replaceAll("(\\[b]|\\[/b]|\\.)", "");
             var html = toHtml(arr[1]);
@@ -101,7 +108,7 @@ public class ArticleFormService {
 
             var html = toHtml(line);
             return new ArticleForm(null, 3, html, "", "");
-        }
+        }*/
     }
 
     private ArticleForm parseLine4(String line) {
@@ -139,7 +146,9 @@ public class ArticleFormService {
         while(matcher.find()) {
             var line = matcher.group();
             var level = Integer.parseInt(String.valueOf(line.charAt(2)));
-            line = line.replaceAll("(\\[m[1-6]]|\\[/m])", "");
+            //line = line.replaceAll("(\\[m[1-6]]|\\[/m])", "");
+            line = line.replaceAll("(\\[m[1-6]])", "<div>");
+            line = line.replaceAll("(\\[/m])", "</div>");
             while (stack.peek() != null && stack.peek().getLevel() >= level) {
                 stack.pop();
             }

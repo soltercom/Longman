@@ -2,7 +2,6 @@ package ru.altercom.spb.longman.word;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.altercom.spb.longman.subarticle.ArticleForm;
 import ru.altercom.spb.longman.system.TransactionManager;
 
 import java.util.*;
